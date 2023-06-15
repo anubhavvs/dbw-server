@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import connectDB from './config/db.js';
 import userRouter from './routes/userRoute.js';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
+import logger from './middleware/loggerMiddleware.js';
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ if (process.env.NODE_ENV === 'development') {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(logger);
 
 app.use('/api/users', userRouter);
 
