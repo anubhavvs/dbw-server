@@ -91,12 +91,4 @@ const logoutUser = (req, res) => {
   res.status(200).json({ message: 'Logged out successfully' });
 };
 
-// @desc    Get all users
-// @route   GET /api/users
-// @access  Private/Admin
-const getAllUsers = asyncHandler(async (req, res) => {
-  const users = await UserModel.find({});
-  res.json(users);
-});
-
-export { loginUser, registerUser, logoutUser, getAllUsers };
+export { loginUser, registerUser, logoutUser };

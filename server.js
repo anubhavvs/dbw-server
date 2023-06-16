@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 
 import connectDB from './config/db.js';
 import userRouter from './routes/userRoute.js';
+import adminRoute from './routes/adminRoute.js';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 import logger from './middleware/loggerMiddleware.js';
 
@@ -24,6 +25,7 @@ app.use(cookieParser());
 app.use(logger);
 
 app.use('/api/users', userRouter);
+app.use('/api/admin', adminRoute);
 
 app.use(notFound);
 app.use(errorHandler);
