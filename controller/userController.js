@@ -12,6 +12,11 @@ const loginUser = asyncHandler(async (req, res) => {
 
   const user = await UserModel.findOne({ email });
 
+  if (user && (await user.status) === 'deleted') {
+    res.status(401);
+    throw new Error('Account is deleted');
+  }
+
   if (user && (await user.matchPassword(password))) {
     generateToken(res, user._id);
 
@@ -20,6 +25,8 @@ const loginUser = asyncHandler(async (req, res) => {
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
+      status: user.status,
+      premium: user.premium,
     });
   } else {
     res.status(401);
@@ -64,6 +71,8 @@ const registerUser = asyncHandler(async (req, res) => {
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
+      status: user.status,
+      premium: user.premium,
     });
   } else {
     res.status(400);

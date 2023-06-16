@@ -21,6 +21,17 @@ const userSchema = mongoose.Schema(
       required: true,
       default: false,
     },
+    status: {
+      type: String,
+      required: true,
+      default: 'active',
+      enum: ['active', 'deleted'],
+    },
+    premium: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
   {
     timestamps: true,
