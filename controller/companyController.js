@@ -13,15 +13,14 @@ const loginCompany = asyncHandler(async (req, res) => {
   const company = await CompanyModel.findOne({ email });
 
   if (company && (await company.matchPassword(password))) {
-    generateToken(res, company._id);
-
     res.json({
       _id: company._id,
       name: company.name,
       email: company.email,
-      website: company.isAdmin,
-      location: company.status,
-      description: company.premium,
+      website: company.website,
+      location: company.location,
+      description: company.description,
+      token: generateToken(company._id),
     });
   } else {
     res.status(401);

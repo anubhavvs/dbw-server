@@ -63,8 +63,6 @@ const registerCompany = asyncHandler(async (req, res) => {
   });
 
   if (company) {
-    generateToken(res, company._id);
-
     res.status(201).json({
       _id: company._id,
       name: company.name,
@@ -73,6 +71,7 @@ const registerCompany = asyncHandler(async (req, res) => {
       location: company.location,
       description: company.description,
       products: company.products,
+      token: generateToken(company._id),
     });
   } else {
     res.status(400);

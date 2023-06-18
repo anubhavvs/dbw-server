@@ -1,7 +1,6 @@
 import asyncHandler from '../middleware/asyncMiddleware.js';
 
 import ProductModel from '../models/productModel.js';
-import CompanyModel from '../models/companyModel.js';
 
 // @desc    Create product
 // @route   POST /api/product/
@@ -9,7 +8,6 @@ import CompanyModel from '../models/companyModel.js';
 const createProduct = asyncHandler(async (req, res) => {
   const { name, description, cellType, capacity, efficiency, warrantyYears } =
     req.body;
-  const company = await CompanyModel.findById(req.company._id);
   const product = new ProductModel({
     company: req.company._id,
     name,
@@ -21,7 +19,6 @@ const createProduct = asyncHandler(async (req, res) => {
   });
 
   const createdProduct = await product.save();
-  company.products.push(createProduct);
 
   if (createdProduct) {
     res.status(201).json(createdProduct);
