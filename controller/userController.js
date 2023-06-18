@@ -4,9 +4,34 @@ import asyncHandler from '../middleware/asyncMiddleware.js';
 import generateToken from '../utils/generateJWT.js';
 import UserModel from '../models/userModel.js';
 
-// @desc    Login user & get token
-// @route   POST /api/users/login
-// @access  Public
+/**
+ * @openapi
+ * /users/login:
+ *    post:
+ *      summary: Authenticate an existing user
+ *      tags:
+ *        - Users
+ *      requestBody:
+ *        description: Provie the email and password of an existing user.
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/LogInUserInput'
+ *      responses:
+ *        200:
+ *          description: Success
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/LogInUserOutput'
+ *        401:
+ *          description: Unauthorized
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/UnauthorizedError'
+ */
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 

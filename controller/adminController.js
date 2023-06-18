@@ -6,9 +6,29 @@ import CompanyModel from '../models/companyModel.js';
 import asyncHandler from '../middleware/asyncMiddleware.js';
 import generateToken from '../utils/generateJWT.js';
 
-// @desc    Get all users
-// @route   GET /api/users
-// @access  Private/Admin
+/**
+ * @openapi
+ * /admin/allUsers:
+ *    get:
+ *      security:
+ *        - bearerAuth: []
+ *      summary: Get all the user
+ *      tags:
+ *        - Users
+ *      responses:
+ *        200:
+ *          description: Success
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/AllUsers'
+ *        401:
+ *          description: Unauthorized
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/UnauthorizedError'
+ */
 const getAllUsers = asyncHandler(async (req, res) => {
   const users = await UserModel.find({});
   res.json(users);
@@ -70,7 +90,6 @@ const registerCompany = asyncHandler(async (req, res) => {
       website: company.website,
       location: company.location,
       description: company.description,
-      products: company.products,
       token: generateToken(company._id),
     });
   } else {

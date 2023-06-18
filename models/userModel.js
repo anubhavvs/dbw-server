@@ -1,6 +1,54 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
+/**
+ * @openapi
+ * components:
+ *  schemas:
+ *    UnauthorizedError:
+ *      type: object
+ *      properties:
+ *        message:
+ *          type: string
+ *          example: Not authorized
+ *    LogInUserInput:
+ *      type: object
+ *      required:
+ *        - email
+ *        - password
+ *      properties:
+ *        email:
+ *          type: string
+ *          default: anubhavvsaha2001@gmail.com
+ *        password:
+ *          type: string
+ *          default: 123456aA*
+ *    LogInUserOutput:
+ *      type: object
+ *      properties:
+ *        _id:
+ *          type: string
+ *        name:
+ *          type: string
+ *          example: Anubhav Saha
+ *        email:
+ *          type: string
+ *          example: anubhavvsaha2001@gmail.com
+ *        isAdmin:
+ *          type: boolean
+ *          example: false
+ *        status:
+ *          enum: [active, deleted]
+ *          example: active
+ *        premium:
+ *          type: boolean
+ *          example: false
+ *    AllUsers:
+ *      type: array
+ *      items:
+ *        $ref: '#/components/schemas/LogInUserOutput'
+ */
+
 const userSchema = mongoose.Schema(
   {
     name: {

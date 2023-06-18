@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const productSchema = mongoose.Schema(
+const systemSchema = mongoose.Schema(
   {
     company: {
       type: mongoose.Schema.Types.ObjectId,
@@ -36,6 +36,6 @@ const productSchema = mongoose.Schema(
   }
 );
 
-const ProductModel = mongoose.model('Product', productSchema);
+const SystemModel = mongoose.model('System', systemSchema);
 
-export default ProductModel;
+export default SystemModel;
