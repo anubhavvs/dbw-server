@@ -80,6 +80,12 @@ const userSchema = mongoose.Schema(
       required: true,
       default: false,
     },
+    projects: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Project',
+      },
+    ],
   },
   {
     timestamps: true,

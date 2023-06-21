@@ -1,6 +1,6 @@
 import asyncHandler from '../middleware/asyncMiddleware.js';
 
-import systemModel from '../models/systemModel.js';
+import SystemModel from '../models/systemModel.js';
 
 // @desc    Create a system
 // @route   POST /api/system/
@@ -8,7 +8,7 @@ import systemModel from '../models/systemModel.js';
 const createSystem = asyncHandler(async (req, res) => {
   const { name, description, cellType, capacity, efficiency, warrantyYears } =
     req.body;
-  const system = new systemModel({
+  const system = new SystemModel({
     company: req.company._id,
     name,
     description,

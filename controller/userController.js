@@ -48,6 +48,9 @@ const loginUser = asyncHandler(async (req, res) => {
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
+      status: user.status,
+      premium: user.premium,
+      projects: user.projects,
       token: generateToken(user._id),
     });
   } else {
@@ -93,6 +96,7 @@ const registerUser = asyncHandler(async (req, res) => {
       isAdmin: user.isAdmin,
       status: user.status,
       premium: user.premium,
+      projects: user.projects,
       token: generateToken(user._id),
     });
   } else {

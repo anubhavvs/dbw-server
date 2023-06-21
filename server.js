@@ -3,12 +3,14 @@ import dotenv from 'dotenv';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import swaggerUI from 'swagger-ui-express';
+import cors from 'cors';
 
 import connectDB from './config/db.js';
 import userRouter from './routes/userRoute.js';
 import adminRoute from './routes/adminRoute.js';
 import companyRoute from './routes/companyRoute.js';
 import systemRoute from './routes/systemRoute.js';
+import projectRoute from './routes/projectRoute.js';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 import logger from './middleware/loggerMiddleware.js';
 import swaggerSpecs from './utils/swagger.js';
@@ -24,6 +26,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use(express.json());
+app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use('/api/v1', swaggerUI.serve, swaggerUI.setup(swaggerSpecs));
@@ -33,6 +36,7 @@ app.use('/api/users', userRouter);
 app.use('/api/admin', adminRoute);
 app.use('/api/company', companyRoute);
 app.use('/api/system', systemRoute);
+app.use('/api/project', projectRoute);
 
 app.use(notFound);
 app.use(errorHandler);
