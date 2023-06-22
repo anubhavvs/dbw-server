@@ -51,4 +51,43 @@ const projectById = asyncHandler(async (req, res) => {
   }
 });
 
-export { createProject, listProjects, projectById };
+// Update product
+const updateProject = asyncHandler(async (req, res) => {
+  const { name, description } = req.body;
+
+  const project = await ProjectModel.findById(req.params.id);
+
+  if (project && project.user._id.toString() == req.user._id.toString()) {
+    project.name = name;
+    project.description = description;
+
+    const updatedProject = await project.save();
+    res.json(updatedProject);
+  } else {
+    res.status(404);
+    throw new Error('No project found');
+  }
+});
+
+const deleteProject = asyncHandler(async (req, res) => {
+  const project = await ProjectModel.findById(req.params.id);
+
+  if (project && project.user._id.toString() == req.user._id.toString()) {
+    const user = await UserModel.findById(project.user);
+    await project.deleteOne({ _id: project._id });
+    user.projects.pull({ _id: project._id });
+    user.save();
+    res.json({ message: 'Project deleted.' });
+  } else {
+    res.status(404);
+    throw new Error('Product not found');
+  }
+});
+
+export {
+  createProject,
+  listProjects,
+  projectById,
+  updateProject,
+  deleteProject,
+};

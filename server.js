@@ -30,7 +30,10 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use('/api/v1', swaggerUI.serve, swaggerUI.setup(swaggerSpecs));
-app.use(logger);
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(logger);
+}
 
 app.use('/api/users', userRouter);
 app.use('/api/admin', adminRoute);
