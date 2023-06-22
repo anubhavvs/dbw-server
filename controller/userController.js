@@ -116,4 +116,79 @@ const logoutUser = (req, res) => {
   res.status(200).json({ message: 'Logged out successfully' });
 };
 
-export { loginUser, registerUser, logoutUser };
+// @desc    Get user profile
+// @route   GET /api/users/profile
+// @access  Private
+const getUserProfile = asyncHandler(async (req, res) => {
+  const user = await UserModel.findById(req.user._id);
+
+  if (user) {
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+      premium: user.premium,
+      createdAt: user.createdAt,
+    });
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
+});
+
+// @desc    Update user profile
+// @route   PUT /api/users/profile
+// @access  Private
+const updateUserProfile = asyncHandler(async (req, res) => {
+  const user = await UserModel.findById(req.user._id);
+
+  if (user) {
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+    if (req.body.password) {
+      user.password = req.body.password;
+    }
+
+    const updatedUser = await user.save();
+
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+      premium: updatedUser.premium,
+      createdAt: updatedUser.createdAt,
+    });
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
+});
+
+// @desc    Delete user profile
+// @route   PUT /api/users/profile
+// @access  Private
+const deleteUserProfile = asyncHandler(async (req, res) => {
+  const user = await UserModel.findById(req.user._id);
+
+  if (user) {
+    user.status = 'deleted';
+
+    await user.save();
+
+    res.json({ message: 'Account deleted' });
+  } else {
+    res.status(400);
+    throw new Error('User not found');
+  }
+});
+
+export {
+  loginUser,
+  registerUser,
+  logoutUser,
+  getUserProfile,
+  updateUserProfile,
+  deleteUserProfile,
+};
