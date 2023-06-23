@@ -43,11 +43,11 @@ const listProjects = asyncHandler(async (req, res) => {
 const projectById = asyncHandler(async (req, res) => {
   const project = await ProjectModel.findById(req.params.id);
 
-  if (project.user._id.toString() == req.user._id.toString()) {
+  if (project && project.user._id.toString() == req.user._id.toString()) {
     res.status(200).json(project);
   } else {
     res.status(401);
-    throw new Error('Unauthorized Access');
+    throw new Error('No project found');
   }
 });
 
