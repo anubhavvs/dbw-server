@@ -1,6 +1,7 @@
 import asyncHandler from '../middleware/asyncMiddleware.js';
 import ProjectModel from '../models/projectModel.js';
 import UserModel from '../models/userModel.js';
+import ProductModel from '../models/productModel.js';
 
 // Creates a new project
 const createProject = asyncHandler(async (req, res) => {
@@ -23,11 +24,9 @@ const createProject = asyncHandler(async (req, res) => {
 
   user.save();
 
-  const createdProduct = await project.save();
+  const createdProject = await project.save();
 
-  res.status(201).json(createdProduct);
-
-  res.status(200);
+  res.status(201).json(createdProject);
 });
 
 // Returns all the project for a user
@@ -41,7 +40,9 @@ const listProjects = asyncHandler(async (req, res) => {
 
 // Get project by Id
 const projectById = asyncHandler(async (req, res) => {
-  const project = await ProjectModel.findById(req.params.id);
+  const project = await ProjectModel.findById(req.params.id).populate(
+    'products'
+  );
 
   if (project && project.user._id.toString() == req.user._id.toString()) {
     res.status(200).json(project);
@@ -74,6 +75,10 @@ const deleteProject = asyncHandler(async (req, res) => {
 
   if (project && project.user._id.toString() == req.user._id.toString()) {
     const user = await UserModel.findById(project.user);
+
+    project.products.forEach(async (element) => {
+      await ProductModel.deleteOne({ _id: element._id });
+    });
     await project.deleteOne({ _id: project._id });
     user.projects.pull({ _id: project._id });
     user.save();

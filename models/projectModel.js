@@ -19,10 +19,14 @@ const projectSchema = mongoose.Schema(
       type: Boolean,
       required: true,
     },
+    readOnly: {
+      type: Boolean,
+      default: false,
+    },
     products: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Project',
+        ref: 'Product',
       },
     ],
   },

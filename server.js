@@ -11,6 +11,7 @@ import adminRoute from './routes/adminRoute.js';
 import companyRoute from './routes/companyRoute.js';
 import systemRoute from './routes/systemRoute.js';
 import projectRoute from './routes/projectRoute.js';
+import productRoute from './routes/productRoutes.js';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 import logger from './middleware/loggerMiddleware.js';
 import swaggerSpecs from './utils/swagger.js';
@@ -40,6 +41,7 @@ app.use('/api/admin', adminRoute);
 app.use('/api/company', companyRoute);
 app.use('/api/system', systemRoute);
 app.use('/api/project', projectRoute);
+app.use('/api/product', productRoute);
 
 app.use(notFound);
 app.use(errorHandler);

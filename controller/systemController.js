@@ -28,4 +28,12 @@ const createSystem = asyncHandler(async (req, res) => {
   }
 });
 
-export { createSystem };
+// @desc    Get all the system
+// @route   GET /api/system/
+// @access  Private/Company
+const getSystems = asyncHandler(async (req, res) => {
+  const systems = await SystemModel.find({});
+  res.json(systems);
+});
+
+export { createSystem, getSystems };
