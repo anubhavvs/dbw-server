@@ -35,10 +35,58 @@ const createProduct = asyncHandler(async (req, res) => {
         res.status(201).json(createdProduct);
       } else {
         res.status(401);
-        throw new Error('No project found');
+        throw new Error('Project not found.');
       }
     }
   }
 });
 
-export { createProduct };
+// update a product
+const updateProduct = asyncHandler(async (req, res) => {
+  const product = await ProductModel.findById(req.params.id);
+
+  if (product) {
+    product.system = req.body.system;
+    product.location = {
+      type: 'Point',
+      coordinates: [req.body.longitude, req.body.latitude],
+    };
+    product.azimuth = req.body.azimuth;
+    product.inclination = req.body.inclination;
+    product.area = req.body.area;
+    product.systemLoss = req.body.systemLoss;
+    product.status = 'Active';
+
+    // start cron job
+
+    // start last 1 year fetch
+
+    const updatedProduct = await product.save();
+  } else {
+    res.status(400);
+    throw new Error('Product not found.');
+  }
+
+  res.json(product);
+});
+
+// delete a product
+const deleteProduct = asyncHandler(async (req, res) => {
+  const product = await ProductModel.findById(req.params.productID);
+  const project = await ProjectModel.findById(req.params.projectID);
+
+  if (product && project.user._id.toString() == req.user._id.toString()) {
+    await project.products.pull({ _id: product._id });
+    await ProductModel.deleteOne({ _id: product._id });
+
+    project.save();
+
+    // delete cron job
+    res.json({ message: 'Product deleted.' });
+  } else {
+    res.status(400);
+    throw new Error('Product not found.');
+  }
+});
+
+export { createProduct, updateProduct, deleteProduct };

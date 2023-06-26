@@ -48,7 +48,7 @@ const projectById = asyncHandler(async (req, res) => {
     res.status(200).json(project);
   } else {
     res.status(401);
-    throw new Error('No project found');
+    throw new Error('Project not found.');
   }
 });
 
@@ -66,7 +66,7 @@ const updateProject = asyncHandler(async (req, res) => {
     res.json(updatedProject);
   } else {
     res.status(404);
-    throw new Error('No project found');
+    throw new Error('Project not found.');
   }
 });
 
@@ -85,7 +85,7 @@ const deleteProject = asyncHandler(async (req, res) => {
     res.json({ message: 'Project deleted.' });
   } else {
     res.status(404);
-    throw new Error('Product not found');
+    throw new Error('Project not found.');
   }
 });
 

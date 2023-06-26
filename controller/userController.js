@@ -130,6 +130,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
       isAdmin: user.isAdmin,
       premium: user.premium,
       createdAt: user.createdAt,
+      projects: user.projects,
     });
   } else {
     res.status(404);
@@ -159,6 +160,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       isAdmin: updatedUser.isAdmin,
       premium: updatedUser.premium,
       createdAt: updatedUser.createdAt,
+      projects: user.projects,
     });
   } else {
     res.status(404);
