@@ -23,6 +23,9 @@ const projectSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    result: {
+      type: String,
+    },
     products: [
       {
         type: mongoose.Schema.Types.ObjectId,

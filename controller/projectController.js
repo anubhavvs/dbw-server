@@ -2,6 +2,7 @@ import asyncHandler from '../middleware/asyncMiddleware.js';
 import ProjectModel from '../models/projectModel.js';
 import UserModel from '../models/userModel.js';
 import ProductModel from '../models/productModel.js';
+import SystemModel from '../models/systemModel.js';
 
 // Creates a new project
 const createProject = asyncHandler(async (req, res) => {
@@ -89,10 +90,74 @@ const deleteProject = asyncHandler(async (req, res) => {
   }
 });
 
+// create report for all active products
+const createReport = asyncHandler(async (req, res) => {
+  const project = await ProjectModel.findById(req.params.id).populate(
+    'products'
+  );
+
+  if (project) {
+    let result = [];
+    let labels = [];
+
+    for (const element of project.products) {
+      if (element.status === 'Active') {
+        var productionList = [];
+        const system = await SystemModel.findById(element.system);
+
+        for (const item of element.weatherData) {
+          var value = (item.t_ghi * ((100 - item.clouds) / 100)) / 1000;
+          productionList.push(value);
+        }
+
+        labels = element.weatherData.map(
+          (item) =>
+            '%27' +
+            item.datetime.getDate() +
+            '-' +
+            (item.datetime.getMonth() + 1) +
+            '%27'
+        );
+
+        result.push({
+          label:
+            '%27' +
+            encodeURIComponent(element.name + ' ') +
+            '(' +
+            element.location.coordinates[1].toFixed(3) +
+            ',' +
+            element.location.coordinates[0].toFixed(3) +
+            ')' +
+            '%27',
+          data: productionList,
+          fill: false,
+        });
+      }
+    }
+
+    var chartURL = `https://quickchart.io/chart?c={type:%27line%27,data:{labels:[${labels}],datasets:${JSON.stringify(
+      result
+    )}},options:{title:{display:true,text:%27Daily%20Electricity%20Production%27},scales:{xAxes:[{display:true,scaleLabel:{display:true,labelString:%27Days%27}}],yAxes:[{display:true,scaleLabel:{display:true,labelString:%27kWh%27}}]}}}`;
+
+    project.result = chartURL;
+    project.readOnly = true;
+    for (const product of project.products) {
+      product.status = 'Inactive';
+      product.save();
+    }
+    project.save();
+    res.json(chartURL.replaceAll('"', ''));
+  } else {
+    res.status(404);
+    throw new Error('Project not found.');
+  }
+});
+
 export {
   createProject,
   listProjects,
   projectById,
   updateProject,
   deleteProject,
+  createReport,
 };

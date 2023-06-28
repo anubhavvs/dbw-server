@@ -1,6 +1,7 @@
 import asyncHandler from '../middleware/asyncMiddleware.js';
 import ProjectModel from '../models/projectModel.js';
 import ProductModel from '../models/productModel.js';
+import fetchWeather from '../utils/fetchWeather.js';
 
 // create a new product
 const createProduct = asyncHandler(async (req, res) => {
@@ -57,17 +58,29 @@ const updateProduct = asyncHandler(async (req, res) => {
     product.systemLoss = req.body.systemLoss;
     product.status = 'Active';
 
-    // start cron job
+    // start last 28 days fetch
+    const data = await fetchWeather(
+      product.location.coordinates[1],
+      product.location.coordinates[0]
+    );
 
-    // start last 1 year fetch
+    data.forEach((element) => {
+      product.weatherData.push({
+        datetime: element.datetime,
+        ghi: element.ghi,
+        t_ghi: element.t_ghi,
+        max_uv: element.max_uv,
+        clouds: element.clouds,
+        temp: element.temp,
+      });
+    });
 
     const updatedProduct = await product.save();
+    res.status(201).json(updatedProduct);
   } else {
     res.status(400);
     throw new Error('Product not found.');
   }
-
-  res.json(product);
 });
 
 // delete a product

@@ -5,11 +5,11 @@ const weatherSchema = mongoose.Schema({
     type: Date,
     required: true,
   },
-  dni: {
+  ghi: {
     type: Number,
     required: true,
   },
-  t_dni: {
+  t_ghi: {
     type: Number,
     required: true,
   },
@@ -17,7 +17,7 @@ const weatherSchema = mongoose.Schema({
     type: Number,
     required: true,
   },
-  cloud: {
+  clouds: {
     type: Number,
     required: true,
   },
@@ -36,15 +36,6 @@ const locationSchema = mongoose.Schema({
   coordinates: {
     type: [Number],
     required: true,
-  },
-});
-
-const resultSchema = mongoose.Schema({
-  date: {
-    type: Date,
-  },
-  value: {
-    type: Number,
   },
 });
 
@@ -82,9 +73,6 @@ const productSchema = mongoose.Schema(
     system: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'System',
-    },
-    result: {
-      type: [resultSchema],
     },
     status: {
       type: String,
