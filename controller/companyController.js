@@ -54,6 +54,54 @@ const loginCompany = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Register a new company
+// @route   POST /api/admin/company
+// @access  Private/Admin
+const registerCompany = asyncHandler(async (req, res) => {
+  const { name, email, password, website, location, description } = req.body;
+
+  if (!validator.isEmail(email)) {
+    res.status(400);
+    throw new Error('Invalid email format');
+  }
+
+  if (!validator.isStrongPassword(password)) {
+    res.status(400);
+    throw new Error('Password not strong');
+  }
+
+  const companyExists = await CompanyModel.findOne({ email });
+
+  if (companyExists) {
+    res.status(400);
+    throw new Error('Company already exists');
+  }
+
+  const company = await CompanyModel.create({
+    name,
+    email,
+    password,
+    website,
+    location,
+    description,
+  });
+
+  if (company) {
+    res.status(201).json({
+      _id: company._id,
+      name: company.name,
+      email: company.email,
+      website: company.website,
+      location: company.location,
+      description: company.description,
+      token: generateToken(company._id),
+    });
+  } else {
+    res.status(400);
+    throw new Error('Invalid company data');
+  }
+});
+
 // get company profile data
 const getCompanyProfile = asyncHandler(async (req, res) => {
   const company = await CompanyModel.findById(req.company._id);
@@ -134,4 +182,5 @@ export {
   getCompanyProfile,
   updateCompanyProfile,
   deleteCompanyProfile,
+  registerCompany,
 };

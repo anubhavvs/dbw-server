@@ -6,6 +6,7 @@ import {
   getCompanyProfile,
   updateCompanyProfile,
   deleteCompanyProfile,
+  registerCompany,
 } from '../controller/companyController.js';
 import { company } from '../middleware/authMiddleware.js';
 
@@ -13,6 +14,7 @@ const router = express.Router();
 
 router.post('/login', loginCompany);
 router.get('/', company, listSystems);
+router.post('/register', registerCompany);
 router
   .route('/profile')
   .get(company, getCompanyProfile)
