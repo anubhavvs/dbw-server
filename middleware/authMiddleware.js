@@ -62,8 +62,6 @@ const company = asyncHandler(async (req, res, next) => {
 
       req.company = await CompanyModel.findById(decoded.id).select('-password');
 
-      console.log(decoded.id);
-
       if (!req.company) {
         res.status(401);
         throw new Error('Not authorized as a company');

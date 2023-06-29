@@ -24,7 +24,7 @@ const createSystem = asyncHandler(async (req, res) => {
     res.status(201).json(createdSystem);
   } else {
     res.status(401);
-    throw new Error('Invalid system data');
+    throw new Error('Invalid system data.');
   }
 });
 
@@ -36,4 +36,38 @@ const getSystems = asyncHandler(async (req, res) => {
   res.json(systems);
 });
 
-export { createSystem, getSystems };
+const editSystem = asyncHandler(async (req, res) => {
+  const { name, description, cellType, capacity, efficiency, warrantyYears } =
+    req.body;
+
+  const system = await SystemModel.findById(req.params.id);
+
+  if (system && system.company._id.toString() == req.company._id.toString()) {
+    system.name = name;
+    system.description = description;
+    system.cellType = cellType;
+    system.capacity = capacity;
+    system.efficiency = efficiency;
+    system.warrantyYears = warrantyYears;
+
+    const createdSystem = await system.save();
+    res.status(201).json(createdSystem);
+  } else {
+    res.status(401);
+    throw new Error('System not found.');
+  }
+});
+
+const deleteSystem = asyncHandler(async (req, res) => {
+  const system = await SystemModel.findById(req.params.id);
+
+  if (system && system.company._id.toString() == req.company._id.toString()) {
+    await SystemModel.deleteOne({ _id: system._id });
+    res.json({ message: 'Project deleted.' });
+  } else {
+    res.status(401);
+    throw new Error('System not found.');
+  }
+});
+
+export { createSystem, getSystems, editSystem, deleteSystem };
