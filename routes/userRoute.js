@@ -7,6 +7,7 @@ import {
   getUserProfile,
   updateUserProfile,
   deleteUserProfile,
+  userStatistics,
 } from '../controller/userController.js';
 import { protect } from '../middleware/authMiddleware.js';
 
@@ -20,5 +21,6 @@ router
   .delete(protect, deleteUserProfile)
   .put(protect, updateUserProfile);
 router.post('/logout', logoutUser);
+router.get('/stats', protect, userStatistics);
 
 export default router;

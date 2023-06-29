@@ -190,12 +190,48 @@ const deleteUserProfile = asyncHandler(async (req, res) => {
 const userStatistics = asyncHandler(async (req, res) => {
   const user = await UserModel.findById(req.user._id);
 
-  if (user) {
-    const projects = await ProjectModel.find({ user: req.user._id });
+  var activeProjectsCount = 0;
+  var inactiveProjectsCount = 0;
+  var activeProductsCount = 0;
+  var inactiveProductsCount = 0;
+  var draftProductsCount = 0;
 
-    if (projects) {
-      res.status(200).json(projects);
+  if (user) {
+    const activeProjects = await ProjectModel.find({
+      user: req.user._id,
+      readOnly: false,
+    });
+
+    const inactiveProjects = await ProjectModel.find({
+      user: req.user._id,
+      readOnly: true,
+    });
+
+    const allProjects = await ProjectModel.find({
+      user: req.user._id,
+    }).populate('products');
+
+    for (const projects of allProjects) {
+      for (const products of projects.products) {
+        if (products.status === 'Inactive')
+          inactiveProductsCount = inactiveProductsCount + 1;
+        if (products.status === 'Draft')
+          draftProductsCount = draftProductsCount + 1;
+        if (products.status === 'Active')
+          activeProductsCount = activeProductsCount + 1;
+      }
     }
+
+    activeProjectsCount = activeProjects.length;
+    inactiveProjectsCount = inactiveProjects.length;
+
+    res.status(200).json({
+      activeProjectsCount,
+      inactiveProjectsCount,
+      activeProductsCount,
+      inactiveProductsCount,
+      draftProductsCount,
+    });
   }
 });
 
@@ -206,4 +242,5 @@ export {
   getUserProfile,
   updateUserProfile,
   deleteUserProfile,
+  userStatistics,
 };
