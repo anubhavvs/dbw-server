@@ -15,6 +15,7 @@ import productRoute from './routes/productRoutes.js';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 import logger from './middleware/loggerMiddleware.js';
 import swaggerSpecs from './utils/swagger.js';
+import cron from './utils/cron.js';
 
 dotenv.config();
 
@@ -32,7 +33,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use('/api/v1', swaggerUI.serve, swaggerUI.setup(swaggerSpecs));
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV != 'production') {
   app.use(logger);
 }
 
@@ -45,6 +46,8 @@ app.use('/api/product', productRoute);
 
 app.use(notFound);
 app.use(errorHandler);
+
+cron();
 
 const PORT = process.env.PORT || 5000;
 

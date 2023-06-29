@@ -3,6 +3,7 @@ import ProjectModel from '../models/projectModel.js';
 import UserModel from '../models/userModel.js';
 import ProductModel from '../models/productModel.js';
 import SystemModel from '../models/systemModel.js';
+import mailReport from '../utils/mailReport.js';
 
 // Creates a new project
 const createProject = asyncHandler(async (req, res) => {
@@ -95,6 +96,7 @@ const createReport = asyncHandler(async (req, res) => {
   const project = await ProjectModel.findById(req.params.id).populate(
     'products'
   );
+  const user = await UserModel.findById(req.user._id);
 
   if (project) {
     let result = [];
@@ -106,7 +108,16 @@ const createReport = asyncHandler(async (req, res) => {
         const system = await SystemModel.findById(element.system);
 
         for (const item of element.weatherData) {
-          var value = (item.t_ghi * ((100 - item.clouds) / 100)) / 1000;
+          var value =
+            (item.t_ghi *
+              element.area *
+              ((100 - item.clouds / item.max_uv) / 100) *
+              ((100 - element.systemLoss) / 100) *
+              Math.cos(element.azimuth - 180) *
+              Math.cos(element.inclination - 30) *
+              (system.efficiency / 100)) /
+            1000;
+
           productionList.push(value);
         }
 
@@ -146,6 +157,13 @@ const createReport = asyncHandler(async (req, res) => {
       product.save();
     }
     project.save();
+    try {
+      mailReport(chartURL.replaceAll('"', ''), user.email, project.name);
+    } catch (error) {
+      res.status(500);
+      throw new Error('Unable to send email');
+    }
+
     res.json(chartURL.replaceAll('"', ''));
   } else {
     res.status(404);

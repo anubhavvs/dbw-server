@@ -3,6 +3,7 @@ import validator from 'validator';
 import asyncHandler from '../middleware/asyncMiddleware.js';
 import generateToken from '../utils/generateJWT.js';
 import UserModel from '../models/userModel.js';
+import ProjectModel from '../models/projectModel.js';
 
 /**
  * @openapi
@@ -183,6 +184,18 @@ const deleteUserProfile = asyncHandler(async (req, res) => {
   } else {
     res.status(400);
     throw new Error('User not found');
+  }
+});
+
+const userStatistics = asyncHandler(async (req, res) => {
+  const user = await UserModel.findById(req.user._id);
+
+  if (user) {
+    const projects = await ProjectModel.find({ user: req.user._id });
+
+    if (projects) {
+      res.status(200).json(projects);
+    }
   }
 });
 
