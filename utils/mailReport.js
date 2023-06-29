@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 
-const mailReport = async (url, receiver, projectName) => {
+const mailReport = async (url, receiver, projectName, mailReport) => {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -15,6 +15,12 @@ const mailReport = async (url, receiver, projectName) => {
     to: receiver,
     subject: 'Your report is ready! 👀',
     html: `<h1>This is your PV Solar Output Report for <u>${projectName}</u>.</h1><img src=${url} />`,
+    attachments: [
+      {
+        filename: 'data.json',
+        content: new Buffer(JSON.stringify(mailReport)),
+      },
+    ],
   });
 
   console.log('Message sent: %s', info.messageId);

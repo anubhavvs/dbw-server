@@ -101,6 +101,7 @@ const createReport = asyncHandler(async (req, res) => {
   if (project) {
     let result = [];
     let labels = [];
+    let emailData = [];
 
     for (const element of project.products) {
       if (element.status === 'Active') {
@@ -119,6 +120,15 @@ const createReport = asyncHandler(async (req, res) => {
             1000;
 
           productionList.push(value);
+          emailData.push({
+            date: item.datetime,
+            value: value,
+            product: element.name,
+            location: [
+              element.location.coordinates[1],
+              element.location.coordinates[0],
+            ],
+          });
         }
 
         labels = element.weatherData.map(
@@ -158,7 +168,12 @@ const createReport = asyncHandler(async (req, res) => {
     }
     project.save();
     try {
-      mailReport(chartURL.replaceAll('"', ''), user.email, project.name);
+      mailReport(
+        chartURL.replaceAll('"', ''),
+        user.email,
+        project.name,
+        emailData
+      );
     } catch (error) {
       res.status(500);
       throw new Error('Unable to send email');
