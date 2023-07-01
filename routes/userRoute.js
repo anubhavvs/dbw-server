@@ -3,7 +3,6 @@ import express from 'express';
 import {
   loginUser,
   registerUser,
-  logoutUser,
   getUserProfile,
   updateUserProfile,
   deleteUserProfile,
@@ -20,7 +19,6 @@ router
   .get(protect, getUserProfile)
   .delete(protect, deleteUserProfile)
   .put(protect, updateUserProfile);
-router.post('/logout', logoutUser);
 router.get('/stats', protect, userStatistics);
 
 export default router;

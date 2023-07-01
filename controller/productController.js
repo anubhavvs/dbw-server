@@ -3,7 +3,9 @@ import ProjectModel from '../models/projectModel.js';
 import ProductModel from '../models/productModel.js';
 import fetchWeather from '../utils/fetchWeather.js';
 
-// create a new product
+// @desc    Create new product
+// @route   POST /api/product/:projectID
+// @access  Private
 const createProduct = asyncHandler(async (req, res) => {
   const project = await ProjectModel.findById(req.params.id);
 
@@ -42,7 +44,9 @@ const createProduct = asyncHandler(async (req, res) => {
   }
 });
 
-// update a product
+// @desc    Update a product
+// @route   PUT /api/product/:id
+// @access  Private
 const updateProduct = asyncHandler(async (req, res) => {
   const product = await ProductModel.findById(req.params.id);
 
@@ -83,7 +87,9 @@ const updateProduct = asyncHandler(async (req, res) => {
   }
 });
 
-// delete a product
+// @desc    Delete a product
+// @route   DELETE /api/product/:projectID/:productID
+// @access  Private
 const deleteProduct = asyncHandler(async (req, res) => {
   const product = await ProductModel.findById(req.params.productID);
   const project = await ProjectModel.findById(req.params.projectID);

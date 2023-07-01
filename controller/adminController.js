@@ -2,33 +2,11 @@ import validator from 'validator';
 
 import UserModel from '../models/userModel.js';
 import LogModel from '../models/logModel.js';
-import CompanyModel from '../models/companyModel.js';
 import asyncHandler from '../middleware/asyncMiddleware.js';
-import generateToken from '../utils/generateJWT.js';
 
-/**
- * @openapi
- * /admin/allUsers:
- *    get:
- *      security:
- *        - bearerAuth: []
- *      summary: Get all the user
- *      tags:
- *        - Users
- *      responses:
- *        200:
- *          description: Success
- *          content:
- *            application/json:
- *              schema:
- *                $ref: '#/components/schemas/AllUsers'
- *        401:
- *          description: Unauthorized
- *          content:
- *            application/json:
- *              schema:
- *                $ref: '#/components/schemas/UnauthorizedError'
- */
+// @desc    Get all users
+// @route   GET /api/admin/allUsers
+// @access  Private/Admin
 const getAllUsers = asyncHandler(async (req, res) => {
   const users = await UserModel.find({});
   res.json(users);
@@ -43,7 +21,7 @@ const getLogs = asyncHandler(async (req, res) => {
 });
 
 // @desc    Get deleted users
-// @route   GET /api/admin/logs
+// @route   GET /api/admin/deletedUsers
 // @access  Private/Admin
 const getDeletedUsers = asyncHandler(async (req, res) => {
   const users = await UserModel.find({ status: 'deleted' });

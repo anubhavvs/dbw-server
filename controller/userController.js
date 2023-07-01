@@ -5,34 +5,9 @@ import generateToken from '../utils/generateJWT.js';
 import UserModel from '../models/userModel.js';
 import ProjectModel from '../models/projectModel.js';
 
-/**
- * @openapi
- * /users/login:
- *    post:
- *      summary: Authenticate an existing user
- *      tags:
- *        - Users
- *      requestBody:
- *        description: Provie the email and password of an existing user.
- *        required: true
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/LogInUserInput'
- *      responses:
- *        200:
- *          description: Success
- *          content:
- *            application/json:
- *              schema:
- *                $ref: '#/components/schemas/LogInUserOutput'
- *        401:
- *          description: Unauthorized
- *          content:
- *            application/json:
- *              schema:
- *                $ref: '#/components/schemas/UnauthorizedError'
- */
+// @desc    Login user
+// @route   POST /api/users/login
+// @access  Public
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
@@ -106,17 +81,6 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Logout user / clear cookie
-// @route   POST /api/users/logout
-// @access  Public
-const logoutUser = (req, res) => {
-  res.cookie('jwt', '', {
-    httpOnly: true,
-    expires: new Date(0),
-  });
-  res.status(200).json({ message: 'Logged out successfully' });
-};
-
 // @desc    Get user profile
 // @route   GET /api/users/profile
 // @access  Private
@@ -187,6 +151,9 @@ const deleteUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Get stats
+// @route   POST /api/users/stats
+// @access  Private
 const userStatistics = asyncHandler(async (req, res) => {
   const user = await UserModel.findById(req.user._id);
 
@@ -238,7 +205,6 @@ const userStatistics = asyncHandler(async (req, res) => {
 export {
   loginUser,
   registerUser,
-  logoutUser,
   getUserProfile,
   updateUserProfile,
   deleteUserProfile,

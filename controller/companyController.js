@@ -5,34 +5,9 @@ import generateToken from '../utils/generateJWT.js';
 import CompanyModel from '../models/companyModel.js';
 import SystemModel from '../models/systemModel.js';
 
-/**
- * @openapi
- * /company/login:
- *    post:
- *      summary: Authenticate an existing company
- *      tags:
- *        - Company
- *      requestBody:
- *        description: Provie the email and password of an existing company.
- *        required: true
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/LogInUserInput'
- *      responses:
- *        200:
- *          description: Success
- *          content:
- *            application/json:
- *              schema:
- *                $ref: '#/components/schemas/LogInUserOutput'
- *        401:
- *          description: Unauthorized
- *          content:
- *            application/json:
- *              schema:
- *                $ref: '#/components/schemas/UnauthorizedError'
- */
+// @desc    Authenticate an existing company
+// @route   POST /api/company/login
+// @access  Public
 const loginCompany = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
@@ -55,8 +30,8 @@ const loginCompany = asyncHandler(async (req, res) => {
 });
 
 // @desc    Register a new company
-// @route   POST /api/admin/company
-// @access  Private/Admin
+// @route   POST /api/company/register
+// @access  Public
 const registerCompany = asyncHandler(async (req, res) => {
   const { name, email, password, website, location, description } = req.body;
 
@@ -102,7 +77,9 @@ const registerCompany = asyncHandler(async (req, res) => {
   }
 });
 
-// get company profile data
+// @desc    Get company profile
+// @route   GET /api/company/profile
+// @access  Private/Company
 const getCompanyProfile = asyncHandler(async (req, res) => {
   const company = await CompanyModel.findById(req.company._id);
 
@@ -122,7 +99,9 @@ const getCompanyProfile = asyncHandler(async (req, res) => {
   }
 });
 
-// update company account
+// @desc    Update company profile
+// @route   PUT /api/company/profile
+// @access  Private/Company
 const updateCompanyProfile = asyncHandler(async (req, res) => {
   const company = await CompanyModel.findById(req.company._id);
 
@@ -153,7 +132,9 @@ const updateCompanyProfile = asyncHandler(async (req, res) => {
   }
 });
 
-// delete company profile
+// @desc    Delete company profile
+// @route   DELETE /api/company/profile
+// @access  Private/Company
 const deleteCompanyProfile = asyncHandler(async (req, res) => {
   const company = await CompanyModel.findById(req.company._id);
 
@@ -167,7 +148,9 @@ const deleteCompanyProfile = asyncHandler(async (req, res) => {
   }
 });
 
-// list systems of the company logged in
+// @desc    Get company systems
+// @route   GET /api/company/
+// @access  Private/Company
 const listSystems = asyncHandler(async (req, res) => {
   const systems = await SystemModel.find({ company: req.company._id });
 

@@ -5,7 +5,9 @@ import ProductModel from '../models/productModel.js';
 import SystemModel from '../models/systemModel.js';
 import mailReport from '../utils/mailReport.js';
 
-// Creates a new project
+// @desc    Create new project
+// @route   POST /api/project/
+// @access  Private
 const createProject = asyncHandler(async (req, res) => {
   const { name, description } = req.body;
   const user = await UserModel.findById(req.user._id);
@@ -31,7 +33,9 @@ const createProject = asyncHandler(async (req, res) => {
   res.status(201).json(createdProject);
 });
 
-// Returns all the project for a user
+// @desc    Returns all project by user
+// @route   GET /api/project/
+// @access  Private
 const listProjects = asyncHandler(async (req, res) => {
   const projects = await ProjectModel.find({ user: req.user._id });
 
@@ -40,7 +44,9 @@ const listProjects = asyncHandler(async (req, res) => {
   }
 });
 
-// Get project by Id
+// @desc    Get project by ID
+// @route   GET /api/project/:id
+// @access  Private
 const projectById = asyncHandler(async (req, res) => {
   const project = await ProjectModel.findById(req.params.id).populate(
     'products'
@@ -54,7 +60,9 @@ const projectById = asyncHandler(async (req, res) => {
   }
 });
 
-// Update product
+// @desc    Update a project
+// @route   PUT /api/project/:id
+// @access  Private
 const updateProject = asyncHandler(async (req, res) => {
   const { name, description } = req.body;
 
@@ -72,6 +80,9 @@ const updateProject = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Delete a project
+// @route   DELETE /api/project/:id
+// @access  Private
 const deleteProject = asyncHandler(async (req, res) => {
   const project = await ProjectModel.findById(req.params.id);
 
@@ -91,7 +102,9 @@ const deleteProject = asyncHandler(async (req, res) => {
   }
 });
 
-// create report for all active products
+// @desc    Create Report
+// @route   POST /api/project/:id
+// @access  Private
 const createReport = asyncHandler(async (req, res) => {
   const project = await ProjectModel.findById(req.params.id).populate(
     'products'

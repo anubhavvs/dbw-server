@@ -23,7 +23,7 @@ const createSystem = asyncHandler(async (req, res) => {
   if (createdSystem) {
     res.status(201).json(createdSystem);
   } else {
-    res.status(401);
+    res.status(400);
     throw new Error('Invalid system data.');
   }
 });
@@ -53,19 +53,22 @@ const editSystem = asyncHandler(async (req, res) => {
     const createdSystem = await system.save();
     res.status(201).json(createdSystem);
   } else {
-    res.status(401);
+    res.status(400);
     throw new Error('System not found.');
   }
 });
 
+// @desc    Delete a system
+// @route   DELETE /api/system/:id
+// @access  Private/Company
 const deleteSystem = asyncHandler(async (req, res) => {
   const system = await SystemModel.findById(req.params.id);
 
   if (system && system.company._id.toString() == req.company._id.toString()) {
     await SystemModel.deleteOne({ _id: system._id });
-    res.json({ message: 'Project deleted.' });
+    res.json({ message: 'System deleted.' });
   } else {
-    res.status(401);
+    res.status(400);
     throw new Error('System not found.');
   }
 });
