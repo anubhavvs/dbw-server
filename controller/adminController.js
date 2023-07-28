@@ -16,7 +16,7 @@ const getAllUsers = asyncHandler(async (req, res) => {
 // @route   GET /api/admin/logs
 // @access  Private/Admin
 const getLogs = asyncHandler(async (req, res) => {
-  const logs = await LogModel.find({});
+  const logs = await LogModel.find({}).sort({ timestamp: 'desc' });
   res.json(logs);
 });
 
