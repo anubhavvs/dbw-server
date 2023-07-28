@@ -8,7 +8,7 @@ import asyncHandler from '../middleware/asyncMiddleware.js';
 // @route   GET /api/admin/allUsers
 // @access  Private/Admin
 const getAllUsers = asyncHandler(async (req, res) => {
-  const users = await UserModel.find({});
+  const users = await UserModel.find({ isAdmin: false });
   res.json(users);
 });
 
